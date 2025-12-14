@@ -311,3 +311,44 @@ remedy(damages(Officer)) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% END USAx-PROC v1.0
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% =========================================================
+% USAx-PROC v1.1 — Challenge Scope & Invalidity Doctrines
+% =========================================================
+% --- Challenge scope ---
+facial_challenge(Case).
+as_applied_challenge(Case).
+
+challenge_scope(Case, facial) :-
+    facial_challenge(Case).
+
+challenge_scope(Case, as_applied) :-
+    as_applied_challenge(Case).
+
+% --- Defects ---
+overbroad(Law).
+vague(Law).
+
+% --- Overbreadth (facial only) ---
+invalid(Law, overbreadth) :-
+    facial_challenge(Case),
+    challenges(Case, Law),
+    overbroad(Law).
+
+% --- Vagueness (facial or as-applied) ---
+invalid(Law, vagueness) :-
+    challenges(Case, Law),
+    vague(Law).
+
+% --- Severability ---
+severable(Law).
+inseverable(Law).
+
+remedy(Law, partial_invalidity) :-
+    invalid(Law, _),
+    severable(Law).
+
+remedy(Law, total_invalidity) :-
+    invalid(Law, _),
+    inseverable(Law).
+
